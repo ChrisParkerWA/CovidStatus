@@ -21,73 +21,77 @@ struct ContentView: View {
         NavigationView {
             VStack(alignment: .leading) {
                 List {
-                    VStack(alignment: .leading) {
-                        
-                        //  Overall global cases, deaths and recoveries
-                        HStack {
-                            Image(self.removeAsterisk(imageName: "globe"))
-                                .resizable()
-                                .background(Color.white)
-                                .frame(width: 60, height: 40)
-                                .cornerRadius(5)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 5).stroke(Color.white, lineWidth: 1)
-                            )
-                            Text("Global Cases")
-                                .font(.system(size: 21, weight: .bold ))
-                        }
-                        
-                        HStack {
-                            Image(systemName: "thermometer")
-                                .foregroundColor(.red)
-                            Text("\(totalCases, specifier: "%.0f")  ")
-                            
-                            Image("dead")
-                                .background(Color.black)
-                                .foregroundColor(.white)
-                            Text("\(totalDeaths, specifier: "%.0f")  ")
-                            
-                            Image(systemName: "heart.circle")
-                                .foregroundColor(.green)
-                            Text("\(totalRecovered, specifier: "%.0f")")
-                        }
-                        .font(.system(size: 18))
-                    }
-                    
-                    
-                    ForEach(entries, id: \.self) { virusCase in
-                        
-                        //  Country cases, deaths and recoveries
+                    Section(header: Text("Overall Status").padding(10)) {
                         VStack(alignment: .leading) {
-                            Text(virusCase.country)
-                                .font(.system(size: 21, weight: .bold ))
+                            
+                            //  Overall global cases, deaths and recoveries
                             HStack {
-                                Image(self.removeAsterisk(imageName: virusCase.country))
+                                Image(self.removeAsterisk(imageName: "globe"))
                                     .resizable()
                                     .background(Color.white)
-                                    .frame(width: 50, height: 33)
+                                    .frame(width: 60, height: 40)
                                     .cornerRadius(5)
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 5).stroke(Color.white.opacity(0.5), lineWidth: 1)
+                                        RoundedRectangle(cornerRadius: 5).stroke(Color.white, lineWidth: 1)
                                 )
-                                Text(" ")
+                                Text("Global Cases")
+                                    .font(.system(size: 21, weight: .bold ))
+                            }
+                            
+                            HStack {
                                 Image(systemName: "thermometer")
                                     .foregroundColor(.red)
-                                
-                                Text("\(virusCase.cases)  ")
+                                Text("\(totalCases, specifier: "%.0f")  ")
                                 
                                 Image("dead")
                                     .background(Color.black)
-                                    .foregroundColor(.white).opacity(0.7)
-                                Text("\(virusCase.deaths)  ")
+                                    .foregroundColor(.white)
+                                Text("\(totalDeaths, specifier: "%.0f")  ")
                                 
                                 Image(systemName: "heart.circle")
                                     .foregroundColor(.green)
-                                Text(virusCase.recovered)
+                                Text("\(totalRecovered, specifier: "%.0f")")
                             }
                             .font(.system(size: 18))
                         }
+                    }
+                    
+                    Section(header: Text("Status of Individual Countries").padding(10)) {
                         
+                        ForEach(entries, id: \.self) { virusCase in
+                            
+                            //  Country cases, deaths and recoveries
+                            VStack(alignment: .leading) {
+                                Text(virusCase.country)
+                                    .font(.system(size: 21, weight: .bold ))
+                                HStack {
+                                    Image(self.removeAsterisk(imageName: virusCase.country))
+                                        .resizable()
+                                        .background(Color.white)
+                                        .frame(width: 50, height: 33)
+                                        .cornerRadius(5)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 5).stroke(Color.white.opacity(0.5), lineWidth: 1)
+                                    )
+                                    Text(" ")
+                                    Image(systemName: "thermometer")
+                                        .foregroundColor(.red)
+                                    
+                                    Text("\(virusCase.cases)  ")
+                                    
+                                    Image("dead")
+                                        .background(Color.black)
+                                        .foregroundColor(.white).opacity(0.7)
+                                    Text("\(virusCase.deaths)  ")
+                                    
+                                    Image(systemName: "heart.circle")
+                                        .foregroundColor(.green)
+                                    Text(virusCase.recovered)
+                                }
+                                .font(.system(size: 18))
+                            }
+                            
+                        }
                     }
                     
                     
