@@ -26,7 +26,7 @@ struct ContentView: View {
                             
                             //  Overall global cases, deaths and recoveries
                             HStack {
-                                Image(self.removeAsterisk(imageName: "globe"))
+                                Image(self.cleanImageName(imageName: "globe"))
                                     .resizable()
                                     .background(Color.white)
                                     .frame(width: 60, height: 40)
@@ -65,7 +65,7 @@ struct ContentView: View {
                                 Text(virusCase.country)
                                     .font(.system(size: 21, weight: .bold ))
                                 HStack {
-                                    Image(self.removeAsterisk(imageName: virusCase.country))
+                                    Image(self.cleanImageName(imageName: virusCase.country))
                                         .resizable()
                                         .background(Color.white)
                                         .frame(width: 50, height: 33)
@@ -205,13 +205,19 @@ struct ContentView: View {
             }
         }
     }
-
     
-    func removeAsterisk(imageName: String) -> String {
-//        print("(\(imageName))")
+    func cleanImageName(imageName: String) -> String {
         var str: String
         str = imageName
+        str = removeAsterisk(str: str)
         str = removeTrailingSpace(str: str)
+        str = removeDiatrics(str: str)
+        str = removeSingleQuotes(str: str)
+        print(str)
+        return str
+    }
+
+    func removeAsterisk(str: String) -> String {
         return str.replacingOccurrences(of: "*", with: "")
     }
     
@@ -221,6 +227,18 @@ struct ContentView: View {
         while newString.last?.isWhitespace == true {
             newString = String(newString.dropLast())
         }
+        return newString
+    }
+    
+    func removeDiatrics(str: String) -> String {
+        return str.folding(options: .diacriticInsensitive, locale: .current)
+    }
+    
+    func removeSingleQuotes(str: String) -> String {
+        var newString: String
+        newString = str
+        newString = newString.replacingOccurrences(of: "'", with: "'")
+        newString = newString.replacingOccurrences(of: "’", with: "'")
         return newString
     }
     
