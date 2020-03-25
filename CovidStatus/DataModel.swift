@@ -10,18 +10,15 @@
 import Foundation
 
 struct CovidCases: Codable {
-    struct Entry: Codable, Hashable, Identifiable, Comparable {
+    struct Entry: Codable, Hashable, Comparable {
         static func < (lhs: CovidCases.Entry, rhs: CovidCases.Entry) -> Bool {
             lhs.country < lhs.country
         }
         
-        let id = UUID()
         let country: String
         let cases: String
         let deaths: String
         let recovered: String
-        let lastupdated: String?
-        let comments: String?
     }
 
     let entries: [Entry]
@@ -31,16 +28,15 @@ struct CovidCases: Codable {
 
 struct BingCases: Codable {
     
-    struct Area: Codable, Hashable, Identifiable, Comparable {
+    struct Area: Codable, Hashable, Comparable {
         static func < (lhs: BingCases.Area, rhs: BingCases.Area) -> Bool {
             lhs.displayName < rhs.displayName
         }
         
-        let id: String
         let displayName: String // country
         let totalConfirmed: Int // cases
-        let totalDeaths: Int    // deaths
-        let totalRecovered: Int  // recovered
+        let totalDeaths: Int?    // deaths
+        let totalRecovered: Int?  // recovered
         
     }
     
@@ -49,7 +45,16 @@ struct BingCases: Codable {
     // Data URL: https://www.bing.com/covid/data
 }
 
-
+struct Country: Codable, Hashable, Identifiable, Comparable {
+    static func < (lhs: Country, rhs: Country) -> Bool {
+        lhs.country < rhs.country
+    }
+    let id = UUID()
+    let country: String
+    let cases: Double
+    let deaths: Double
+    let recovered: Double
+}
 
 
 

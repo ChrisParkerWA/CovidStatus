@@ -9,19 +9,27 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var entries = [CovidCases.Entry]()
-    @State private var resultsArray = [CovidCases.Entry]()
+    @State private var entries = [Country]()
+    @State private var resultsArray = [Country]()
     @State private var totalCases = 0.0
     @State private var totalDeaths = 0.0
     @State private var totalRecovered = 0.0
     @State private var switchDataSource = false
     @State private var dataSourceText = "Microsoft/Bing"
     
+    var countrySectionHeader: some View { return
+        HStack {
+            Text("Status of Individual Countries")
+            Spacer()
+            Text("(\(entries.count))")
+        }.padding([.top, .bottom], 7)
+    }
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
                 List {
-                    Section(header: Text("Overall Status").padding(10)) {
+                    Section(header: Text("Overall Status").padding([.top, .bottom], 7)) {
                         VStack(alignment: .leading) {
                             
                             //  Overall global cases, deaths and recoveries
@@ -56,7 +64,7 @@ struct ContentView: View {
                         }
                     }
                     
-                    Section(header: Text("Status of Individual Countries").padding(10)) {
+                    Section(header: countrySectionHeader ) {
                         
                         ForEach(entries, id: \.self) { virusCase in
                             
@@ -77,16 +85,16 @@ struct ContentView: View {
                                     Image(systemName: "thermometer")
                                         .foregroundColor(.red)
                                     
-                                    Text("\(virusCase.cases)  ")
+                                    Text("\(virusCase.cases, specifier: "%.0f")  ")
                                     
                                     Image("dead")
                                         .background(Color.black)
                                         .foregroundColor(.white).opacity(0.7)
-                                    Text("\(virusCase.deaths)  ")
+                                    Text("\(virusCase.deaths, specifier: "%.0f")  ")
                                     
                                     Image(systemName: "heart.circle")
                                         .foregroundColor(.green)
-                                    Text(virusCase.recovered)
+                                    Text("\(virusCase.recovered, specifier: "%.0f")")
                                 }
                                 .font(.system(size: 18))
                             }
@@ -161,17 +169,19 @@ struct ContentView: View {
         DataManager().getJSON(urlString: urlString) { (results: CovidCases?) in
             if let results = results {
                 for result in results.entries {
-                    self.totalCases += Double(self.removeCommaFromNumbers(str: result.cases)) ?? 0
-                    self.totalDeaths += Double(self.removeCommaFromNumbers(str: result.deaths)) ?? 0
-                    self.totalRecovered += Double(self.removeCommaFromNumbers(str: result.recovered)) ?? 0
-                    self.resultsArray.append(result)
+                    self.totalCases += Double(self.removeCommaFromNumbers(str: result.cases)) ?? 0.0
+                    self.totalDeaths += Double(self.removeCommaFromNumbers(str: result.deaths)) ?? 0.0
+                    self.totalRecovered += Double(self.removeCommaFromNumbers(str: result.recovered)) ?? 0.0
+                    let newEntry = Country(country: result.country, cases: Double(self.removeCommaFromNumbers(str: result.cases)) ?? 0, deaths: Double(self.removeCommaFromNumbers(str: result.deaths)) ?? 0, recovered: Double(self.removeCommaFromNumbers(str: result.recovered)) ?? 0)
+                    self.resultsArray.append(newEntry)
                 }
                 
                 // Delay loading entries to give time for Totals to be populated in the UI
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.entries = self.resultsArray.sorted(by: { (lhs: CovidCases.Entry, rhs: CovidCases.Entry) -> Bool in
+                    self.entries = self.resultsArray.sorted(by: { (lhs: Country, rhs: Country) -> Bool in
                         lhs.country < rhs.country
                     })
+                    print(self.entries.count)
                 }
             }
         }        
@@ -189,17 +199,18 @@ struct ContentView: View {
             if let results = results {
                 for result in results.areas {                    
                     self.totalCases += Double(result.totalConfirmed)
-                    self.totalDeaths += Double(result.totalDeaths)
-                    self.totalRecovered += Double(result.totalRecovered)
-                    let newEntry = CovidCases.Entry(country: result.displayName, cases: String(result.totalConfirmed), deaths: String(result.totalDeaths), recovered: String(result.totalRecovered), lastupdated: "", comments: "")
+                    self.totalDeaths += Double(result.totalDeaths ?? 0)
+                    self.totalRecovered += Double(result.totalRecovered ?? 0)
+                    let newEntry = Country(country: result.displayName, cases: Double(result.totalConfirmed), deaths: Double(result.totalDeaths ?? 0), recovered: Double(result.totalRecovered ?? 0))
                     self.resultsArray.append(newEntry)
                 }
                 
                 // Delay loading entries to give time for Totals to be populated in the UI
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.entries = self.resultsArray.sorted(by: { (lhs: CovidCases.Entry, rhs: CovidCases.Entry) -> Bool in
+                    self.entries = self.resultsArray.sorted(by: { (lhs: Country, rhs: Country) -> Bool in
                         lhs.country < rhs.country
                     })
+                    print(self.entries.count)
                 }
                 
             }
