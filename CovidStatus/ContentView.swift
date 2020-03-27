@@ -16,6 +16,8 @@ struct ContentView: View {
     @State private var totalRecovered = 0.0
     @State private var switchDataSource = false
     @State private var dataSourceText = "Microsoft/Bing"
+    @State private var sortOptions = ["Country", "Cases", "Deaths", "Recovered"]
+    @State private var selectedSortOption = "Country"
     
     var countrySectionHeader: some View { return
         HStack {
@@ -23,6 +25,17 @@ struct ContentView: View {
             Spacer()
             Text("(\(entries.count))")
         }.padding([.top, .bottom], 7)
+    }
+    
+    var sortedData: [Country] {
+        let filtered = entries
+        
+        switch selectedSortOption {
+        case "Country": return filtered.sorted { $0.country < $1.country }
+        case "Cases": return filtered.sorted { $0.cases > $1.cases }
+        case "Deaths": return filtered.sorted { $0.deaths > $1.deaths }
+        default: return filtered.sorted { $0.recovered > $1.recovered }
+        }
     }
     
     var body: some View {
@@ -65,8 +78,17 @@ struct ContentView: View {
                     }
                     
                     Section(header: countrySectionHeader ) {
+                        HStack {
+                            Text("Sort:")
+                            Picker("", selection: $selectedSortOption) {
+                                ForEach(sortOptions, id: \.self) { option in
+                                    Text(option)
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
                         
-                        ForEach(entries, id: \.self) { virusCase in
+                        ForEach(sortedData, id: \.self) { virusCase in
                             
                             //  Country cases, deaths and recoveries
                             VStack(alignment: .leading) {
@@ -117,16 +139,18 @@ struct ContentView: View {
             }
             .navigationBarTitle("COVID-19 Cases")
             .navigationBarItems(leading:
+                // Switch Data Source
                 Button(action: {
                     self.switchDataSource.toggle()
                     self.loadData()
                 }) {
                     Image(systemName: "arrow.right.arrow.left.circle")//arrow.swap
                         .font(.system(size: 25))
-                        .padding(10)
+                        .padding(5)
                         .background(Color.clear)
                         .clipShape(Circle())
-                },trailing:
+                }
+                ,trailing:
                 Button(action: {
                     withAnimation {
                         self.loadData()
@@ -135,7 +159,7 @@ struct ContentView: View {
                 }) {
                     Image(systemName: "arrow.2.circlepath.circle")
                         .font(.system(size: 25))
-                        .padding(10)
+                        .padding(5)
                         .background(Color.clear)
                         .clipShape(Circle())
                 }
@@ -224,7 +248,9 @@ struct ContentView: View {
         str = removeTrailingSpace(str: str)
         str = removeDiatrics(str: str)
         str = removeSingleQuotes(str: str)
+        #if DEBUG
         print(str)
+        #endif
         return str
     }
 
