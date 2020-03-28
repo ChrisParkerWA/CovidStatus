@@ -78,16 +78,7 @@ struct ContentView: View {
                     }
                     
                     Section(header: countrySectionHeader ) {
-                        HStack {
-                            Text("Sort:")
-                            Picker("", selection: $selectedSortOption) {
-                                ForEach(sortOptions, id: \.self) { option in
-                                    Text(option)
-                                }
-                            }
-                            .pickerStyle(SegmentedPickerStyle())
-                        }
-                        
+                       
                         ForEach(sortedData, id: \.self) { virusCase in
                             
                             //  Country cases, deaths and recoveries
@@ -126,11 +117,22 @@ struct ContentView: View {
                     
                     
                 }
+                //  Soting options
+                HStack {
+                    Text("Sort:")
+                    Picker("", selection: $selectedSortOption) {
+                        ForEach(sortOptions, id: \.self) { option in
+                            Text(option)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }.padding(.horizontal)
+                
                 //  Developer credit and data source
                 ZStack {
                     Color.gray
-                        .frame(height: 35)
-                    Text("Created by: Chris Parker\nData Source: \(dataSourceText)")
+                        .frame(height: 25)
+                    Text("Created by: Chris Parker | Data Source: \(dataSourceText)")
                         .font(.footnote)
                         .background(Color.gray)
                         .foregroundColor(.black)
