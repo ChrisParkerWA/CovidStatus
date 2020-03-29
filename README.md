@@ -17,3 +17,9 @@
  
  27-Mar-2020
  Added a Sort option to allow sorting by country (ascending), cases (Descending), deaths (Descending) or recovered (Descending)
+ 
+ 29-Mar-2020
+ Changed the image icon indicating those who are deceased. 
+ Updated the DataModel to include the date that the data was lastUpdated which is now displayed.
+ Added an Activity Indicator with UIView Wrapper code courtesy of an article by John Sundell.
+https://www.swiftbysundell.com/tips/inline-wrapping-of-uikit-or-appkit-views-within-swiftui/

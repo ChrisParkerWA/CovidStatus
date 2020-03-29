@@ -9,16 +9,21 @@
 
 import Foundation
 
-struct CovidCases: Codable {
+struct SCMPCases: Codable {
+    
+    let last_updated: String
+    
     struct Entry: Codable, Hashable, Comparable {
-        static func < (lhs: CovidCases.Entry, rhs: CovidCases.Entry) -> Bool {
+        static func < (lhs: SCMPCases.Entry, rhs: SCMPCases.Entry) -> Bool {
             lhs.country < lhs.country
         }
         
+        let continent: String
         let country: String
         let cases: String
         let deaths: String
         let recovered: String
+        let lastupdated: String?
     }
 
     let entries: [Entry]
@@ -27,6 +32,8 @@ struct CovidCases: Codable {
 }
 
 struct BingCases: Codable {
+    
+    let lastUpdated: String
     
     struct Area: Codable, Hashable, Comparable {
         static func < (lhs: BingCases.Area, rhs: BingCases.Area) -> Bool {
@@ -37,6 +44,7 @@ struct BingCases: Codable {
         let totalConfirmed: Int // cases
         let totalDeaths: Int?    // deaths
         let totalRecovered: Int?  // recovered
+        let lastUpdated: String?
         
     }
     

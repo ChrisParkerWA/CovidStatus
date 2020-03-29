@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB56D70A243083C4007B6247 /* UIViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB56D709243083C4007B6247 /* UIViewWrapper.swift */; };
 		DBD85057241FBFFA00E1F4CC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD85056241FBFFA00E1F4CC /* AppDelegate.swift */; };
 		DBD85059241FBFFA00E1F4CC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD85058241FBFFA00E1F4CC /* SceneDelegate.swift */; };
 		DBD8505B241FBFFA00E1F4CC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD8505A241FBFFA00E1F4CC /* ContentView.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DB56D709243083C4007B6247 /* UIViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewWrapper.swift; sourceTree = "<group>"; };
 		DBD85053241FBFFA00E1F4CC /* CovidStatus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CovidStatus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBD85056241FBFFA00E1F4CC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBD85058241FBFFA00E1F4CC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,6 +43,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DB56D708243083AF007B6247 /* Wrappers */ = {
+			isa = PBXGroup;
+			children = (
+				DB56D709243083C4007B6247 /* UIViewWrapper.swift */,
+			);
+			path = Wrappers;
+			sourceTree = "<group>";
+		};
 		DBD8504A241FBFFA00E1F4CC = {
 			isa = PBXGroup;
 			children = (
@@ -62,6 +72,7 @@
 			children = (
 				DBD85056241FBFFA00E1F4CC /* AppDelegate.swift */,
 				DBD85058241FBFFA00E1F4CC /* SceneDelegate.swift */,
+				DB56D708243083AF007B6247 /* Wrappers */,
 				DBD8505A241FBFFA00E1F4CC /* ContentView.swift */,
 				DBD8506A241FC01300E1F4CC /* DataModel.swift */,
 				DBD8506C241FC3E800E1F4CC /* DataManager.swift */,
@@ -153,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBD85057241FBFFA00E1F4CC /* AppDelegate.swift in Sources */,
+				DB56D70A243083C4007B6247 /* UIViewWrapper.swift in Sources */,
 				DBD8506D241FC3E800E1F4CC /* DataManager.swift in Sources */,
 				DBD8506B241FC01300E1F4CC /* DataModel.swift in Sources */,
 				DBD85059241FBFFA00E1F4CC /* SceneDelegate.swift in Sources */,

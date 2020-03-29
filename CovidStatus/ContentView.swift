@@ -9,8 +9,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.colorScheme) var colorScheme
     @State private var entries = [Country]()
     @State private var resultsArray = [Country]()
+    @State private var lastUdated = ""
     @State private var totalCases = 0.0
     @State private var totalDeaths = 0.0
     @State private var totalRecovered = 0.0
@@ -18,6 +20,7 @@ struct ContentView: View {
     @State private var dataSourceText = "Microsoft/Bing"
     @State private var sortOptions = ["Country", "Cases", "Deaths", "Recovered"]
     @State private var selectedSortOption = "Country"
+    @State private var showActivityIndicator = false
     
     var countrySectionHeader: some View { return
         HStack {
@@ -40,105 +43,123 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                List {
-                    Section(header: Text("Overall Status").padding([.top, .bottom], 7)) {
-                        VStack(alignment: .leading) {
-                            
-                            //  Overall global cases, deaths and recoveries
-                            HStack {
-                                Image(self.cleanImageName(imageName: "globe"))
-                                    .resizable()
-                                    .background(Color.white)
-                                    .frame(width: 60, height: 40)
-                                    .cornerRadius(5)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 5).stroke(Color.white, lineWidth: 1)
-                                )
-                                Text("Global Cases")
-                                    .font(.system(size: 21, weight: .bold ))
-                            }
-                            
-                            HStack {
-                                Image(systemName: "thermometer")
-                                    .foregroundColor(.red)
-                                Text("\(totalCases, specifier: "%.0f")  ")
-                                
-                                Image("dead")
-                                    .background(Color.black)
-                                    .foregroundColor(.white)
-                                Text("\(totalDeaths, specifier: "%.0f")  ")
-                                
-                                Image(systemName: "heart.circle")
-                                    .foregroundColor(.green)
-                                Text("\(totalRecovered, specifier: "%.0f")")
-                            }
-                            .font(.system(size: 18))
-                        }
-                    }
-                    
-                    Section(header: countrySectionHeader ) {
-                       
-                        ForEach(sortedData, id: \.self) { virusCase in
-                            
-                            //  Country cases, deaths and recoveries
+            ZStack {
+                VStack(alignment: .leading) {
+                    List {
+                        Section(header: Text("Overall Status").padding([.top, .bottom], 7)) {
                             VStack(alignment: .leading) {
-                                Text(virusCase.country)
-                                    .font(.system(size: 21, weight: .bold ))
+                                
+                                //  Overall global cases, deaths and recoveries
                                 HStack {
-                                    Image(self.cleanImageName(imageName: virusCase.country))
+                                    Image(self.cleanImageName(imageName: "globe"))
                                         .resizable()
                                         .background(Color.white)
-                                        .frame(width: 50, height: 33)
+                                        .frame(width: 60, height: 40)
                                         .cornerRadius(5)
                                         .overlay(
-                                            RoundedRectangle(cornerRadius: 5).stroke(Color.white.opacity(0.5), lineWidth: 1)
+                                            RoundedRectangle(cornerRadius: 5).stroke((colorScheme == .dark ? Color.white : Color.black).opacity(0.5), lineWidth: 1)
                                     )
-                                    Text(" ")
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text("Global Cases")
+                                            .font(.system(size: 21, weight: .bold ))
+                                        Text("Last updated: \(formatDate(dateString: lastUdated))")
+                                            .font(.system(size: 12, weight: .bold ))
+                                    }
+                                }
+                                
+                                HStack {
                                     Image(systemName: "thermometer")
                                         .foregroundColor(.red)
+                                    Text("\(totalCases, specifier: "%.0f")  ")
                                     
-                                    Text("\(virusCase.cases, specifier: "%.0f")  ")
-                                    
-                                    Image("dead")
-                                        .background(Color.black)
-                                        .foregroundColor(.white).opacity(0.7)
-                                    Text("\(virusCase.deaths, specifier: "%.0f")  ")
+                                    Image("skull")
+                                        .foregroundColor(self.colorScheme == .dark ? .white : .black)
+                                        .frame(width: 30, height: 30)
+                                        .clipShape(Circle())
+                                    Text("\(totalDeaths, specifier: "%.0f")  ")
                                     
                                     Image(systemName: "heart.circle")
                                         .foregroundColor(.green)
-                                    Text("\(virusCase.recovered, specifier: "%.0f")")
+                                    Text("\(totalRecovered, specifier: "%.0f")")
                                 }
                                 .font(.system(size: 18))
                             }
+                        }
+                        
+                        Section(header: countrySectionHeader ) {
                             
+                            ForEach(sortedData, id: \.self) { virusCase in
+                                //  Country cases, deaths and recoveries
+                                VStack(alignment: .leading) {
+                                    Text(virusCase.country)
+                                        .font(.system(size: 21, weight: .bold ))
+                                    HStack {
+                                        Image(self.cleanImageName(imageName: virusCase.country))
+                                            .resizable()
+                                            .background(Color.white)
+                                            .frame(width: 50, height: 33)
+                                            .cornerRadius(5)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 5).stroke((self.colorScheme == .dark ? Color.white : Color.black).opacity(0.5), lineWidth: 1)
+                                        )
+                                        
+                                        Image(systemName: "thermometer")
+                                            .foregroundColor(.red)
+                                        
+                                        Text("\(virusCase.cases, specifier: "%.0f")  ")
+                                        
+                                        Image("skull")
+                                            .foregroundColor(self.colorScheme == .dark ? .white : .black)
+                                            .frame(width: 30, height: 30)
+                                            .clipShape(Circle())
+                                        Text("\(virusCase.deaths, specifier: "%.0f")  ")
+                                        
+                                        Image(systemName: "heart.circle")
+                                            .foregroundColor(.green)
+                                        Text("\(virusCase.recovered, specifier: "%.0f")")
+                                    }
+                                    .font(.system(size: 17))
+                                }
+                                .listRowBackground(RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(Color.white.opacity(0.3)).shadow(radius: 2, y: 2).shadow(radius: 2, y: 2)
+                                .padding([.leading, .trailing],10))
+                            }
                         }
                     }
                     
-                    
-                }
-                //  Soting options
-                HStack {
-                    Text("Sort:")
-                    Picker("", selection: $selectedSortOption) {
-                        ForEach(sortOptions, id: \.self) { option in
-                            Text(option)
+                    //  Soting options
+                    HStack {
+                        Text("Sort:")
+                        Picker("", selection: $selectedSortOption) {
+                            ForEach(sortOptions, id: \.self) { option in
+                                Text(option)
+                            }
                         }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }.padding(.horizontal)
+                    
+                    //  Developer credit and data source
+                    ZStack {
+                        Color.gray
+                            .frame(height: 25)
+                        Text("Created by: Chris Parker | Data Source: \(dataSourceText)")
+                            .font(.footnote)
+                            .background(Color.gray)
+                            .foregroundColor(.black)
                     }
-                    .pickerStyle(SegmentedPickerStyle())
-                }.padding(.horizontal)
-                
-                //  Developer credit and data source
-                ZStack {
-                    Color.gray
-                        .frame(height: 25)
-                    Text("Created by: Chris Parker | Data Source: \(dataSourceText)")
-                        .font(.footnote)
-                        .background(Color.gray)
-                        .foregroundColor(.black)
                 }
                 
+                //  Display Activity Indicator while loading data.
+                Wrap(UIActivityIndicatorView()) {
+                    if self.showActivityIndicator {
+                        $0.startAnimating()
+                    } else {
+                        $0.stopAnimating()
+                    }
+                }
             }
+                
             .navigationBarTitle("COVID-19 Cases")
             .navigationBarItems(leading:
                 // Switch Data Source
@@ -175,8 +196,9 @@ struct ContentView: View {
     }
     
     func loadData() {
+        showActivityIndicator = true
         if switchDataSource {
-            dataSourceText = "South China Morning Post"
+            dataSourceText = "SCMP"
             loadSCMPData()
         } else {
             dataSourceText = "Microsoft/Bing"
@@ -192,8 +214,9 @@ struct ContentView: View {
         totalRecovered = 0
         
         let urlString = "https://interactive-static.scmp.com/sheet/wuhan/viruscases.json"
-        DataManager().getJSON(urlString: urlString) { (results: CovidCases?) in
+        DataManager().getJSON(urlString: urlString) { (results: SCMPCases?) in
             if let results = results {
+                self.lastUdated = results.last_updated
                 for result in results.entries {
                     self.totalCases += Double(self.removeCommaFromNumbers(str: result.cases)) ?? 0.0
                     self.totalDeaths += Double(self.removeCommaFromNumbers(str: result.deaths)) ?? 0.0
@@ -207,7 +230,7 @@ struct ContentView: View {
                     self.entries = self.resultsArray.sorted(by: { (lhs: Country, rhs: Country) -> Bool in
                         lhs.country < rhs.country
                     })
-                    print(self.entries.count)
+                    self.showActivityIndicator = false
                 }
             }
         }        
@@ -223,6 +246,7 @@ struct ContentView: View {
         let urlString = "https://www.bing.com/covid/data"
         DataManager().getJSON(urlString: urlString) { (results: BingCases?) in
             if let results = results {
+                self.lastUdated = results.lastUpdated
                 for result in results.areas {                    
                     self.totalCases += Double(result.totalConfirmed)
                     self.totalDeaths += Double(result.totalDeaths ?? 0)
@@ -236,7 +260,7 @@ struct ContentView: View {
                     self.entries = self.resultsArray.sorted(by: { (lhs: Country, rhs: Country) -> Bool in
                         lhs.country < rhs.country
                     })
-                    print(self.entries.count)
+                    self.showActivityIndicator = false
                 }
                 
             }
@@ -249,7 +273,7 @@ struct ContentView: View {
         str = removeAsterisk(str: str)
         str = removeTrailingSpace(str: str)
         str = removeDiatrics(str: str)
-        str = removeSingleQuotes(str: str)
+        str = removeForwardeQuotes(str: str)
         #if DEBUG
         print(str)
         #endif
@@ -273,16 +297,23 @@ struct ContentView: View {
         return str.folding(options: .diacriticInsensitive, locale: .current)
     }
     
-    func removeSingleQuotes(str: String) -> String {
-        var newString: String
-        newString = str
-        newString = newString.replacingOccurrences(of: "'", with: "'")
-        newString = newString.replacingOccurrences(of: "’", with: "'")
-        return newString
+    func removeForwardeQuotes(str: String) -> String {
+        return str.replacingOccurrences(of: "’", with: "'")
     }
     
     func removeCommaFromNumbers(str: String) -> String {
         return str.replacingOccurrences(of: ",", with: "")
+    }
+    
+    func formatDate(dateString: String) -> String {
+        guard dateString != "" else { return "Date is nil"}
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"  //  2020-03-29T00:50:02.918Z
+        let dateObj = formatter.date(from: dateString)
+        formatter.dateFormat = "dd-MMM-yyy HH:mm:ss"
+        
+        return formatter.string(from: dateObj!)
     }
 }
 
