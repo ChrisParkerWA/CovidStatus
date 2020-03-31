@@ -23,3 +23,6 @@
  Updated the DataModel to include the date that the data was lastUpdated which is now displayed.
  Added an Activity Indicator with UIView Wrapper code courtesy of an article by John Sundell.
 https://www.swiftbysundell.com/tips/inline-wrapping-of-uikit-or-appkit-views-within-swiftui/
+
+![Simulator Screen Shot - iPhone 11 - 2020-03-31 at 12 36 21](https://user-images.githubusercontent.com/42756158/77987537-a91a4000-734c-11ea-869a-f53ee8afbc9d.png)
+
