@@ -25,5 +25,6 @@
 https://www.swiftbysundell.com/tips/inline-wrapping-of-uikit-or-appkit-views-within-swiftui/
 
 ![Simulator Screen Shot - iPhone 11 - 2020-03-31 at 12 53 53](https://user-images.githubusercontent.com/42756158/77988462-01ead800-734f-11ea-92cb-2e1378648a40.png)
+<img align="right" src="https://user-images.githubusercontent.com/42756158/77988462-01ead800-734f-11ea-92cb-2e1378648a40.png">
 
 
