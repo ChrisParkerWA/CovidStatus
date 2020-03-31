@@ -12,6 +12,7 @@ import Foundation
 struct SCMPCases: Codable {
     
     let last_updated: String
+    let entries: [Entry]
     
     struct Entry: Codable, Hashable, Comparable {
         static func < (lhs: SCMPCases.Entry, rhs: SCMPCases.Entry) -> Bool {
@@ -26,14 +27,13 @@ struct SCMPCases: Codable {
         let lastupdated: String?
     }
 
-    let entries: [Entry]
-    
     // Data URL: https://interactive-static.scmp.com/sheet/wuhan/viruscases.json
 }
 
 struct BingCases: Codable {
     
     let lastUpdated: String
+    let areas: [Area]
     
     struct Area: Codable, Hashable, Comparable {
         static func < (lhs: BingCases.Area, rhs: BingCases.Area) -> Bool {
@@ -47,8 +47,6 @@ struct BingCases: Codable {
         let lastUpdated: String?
         
     }
-    
-    let areas: [Area]
     
     // Data URL: https://www.bing.com/covid/data
 }

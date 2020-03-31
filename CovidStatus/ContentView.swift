@@ -63,7 +63,7 @@ struct ContentView: View {
                                     VStack(alignment: .leading) {
                                         Text("Global Cases")
                                             .font(.system(size: 21, weight: .bold ))
-                                        Text("Last updated: \(formatDate(dateString: lastUdated))")
+                                        Text("Last updated: \(formatDate(dateString: lastUdated)) UTC")
                                             .font(.system(size: 12, weight: .bold ))
                                     }
                                 }
@@ -73,10 +73,11 @@ struct ContentView: View {
                                         .foregroundColor(.red)
                                     Text("\(totalCases, specifier: "%.0f")  ")
                                     
-                                    Image("skull")
+                                    Image("dead")
+                                        .resizable()
                                         .foregroundColor(self.colorScheme == .dark ? .white : .black)
-                                        .frame(width: 30, height: 30)
-                                        .clipShape(Circle())
+                                        .frame(width: 25, height: 25)
+
                                     Text("\(totalDeaths, specifier: "%.0f")  ")
                                     
                                     Image(systemName: "heart.circle")
@@ -109,10 +110,11 @@ struct ContentView: View {
                                         
                                         Text("\(virusCase.cases, specifier: "%.0f")  ")
                                         
-                                        Image("skull")
+                                        Image("dead")
+                                            .resizable()
                                             .foregroundColor(self.colorScheme == .dark ? .white : .black)
-                                            .frame(width: 30, height: 30)
-                                            .clipShape(Circle())
+                                            .frame(width: 25, height: 25)
+                    
                                         Text("\(virusCase.deaths, specifier: "%.0f")  ")
                                         
                                         Image(systemName: "heart.circle")
@@ -121,9 +123,6 @@ struct ContentView: View {
                                     }
                                     .font(.system(size: 17))
                                 }
-                                .listRowBackground(RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(Color.white.opacity(0.3)).shadow(radius: 2, y: 2).shadow(radius: 2, y: 2)
-                                .padding([.leading, .trailing],10))
                             }
                         }
                     }
@@ -137,7 +136,8 @@ struct ContentView: View {
                             }
                         }
                         .pickerStyle(SegmentedPickerStyle())
-                    }.padding(.horizontal)
+                    }
+                    .padding(.horizontal)
                     
                     //  Developer credit and data source
                     ZStack {
@@ -178,7 +178,6 @@ struct ContentView: View {
                     withAnimation {
                         self.loadData()
                     }
-                    
                 }) {
                     Image(systemName: "arrow.2.circlepath.circle")
                         .font(.system(size: 25))
@@ -277,6 +276,12 @@ struct ContentView: View {
         #if DEBUG
         print(str)
         #endif
+        if UIImage(named: str) == nil {
+            str = "FlagMissing"
+            #if DEBUG
+            print(">>>>>>\(imageName) FLAG MISSING")
+            #endif
+        }       
         return str
     }
 
